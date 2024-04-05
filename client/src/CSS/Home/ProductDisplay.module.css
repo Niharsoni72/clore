@@ -1,0 +1,17 @@
+.container_products{
+    width:90%;
+    /* border:1px solid black; */
+    height:100%;
+    
+    display: flex;
+}
+.container_main{
+    width:98%;
+    margin:auto;
+
+}
+
+.container_title{
+    text-align: center;
+    font-family:sans-serif;
+}

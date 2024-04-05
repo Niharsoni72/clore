@@ -1,0 +1,18 @@
+.Card{
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+    /* border: 1px solid black; */
+}
+.design_container{
+    width:96%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-top:2%;
+}
+.design_center{
+    /* width:96%; */
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    /* background-color:yellowgreen; */
+}

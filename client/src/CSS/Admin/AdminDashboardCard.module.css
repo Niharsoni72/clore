@@ -1,0 +1,17 @@
+.main_card {
+    background: linear-gradient(
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0.8)
+    );
+    padding: 2%;
+    height: auto;
+    width: 20rem;
+    margin-top: 3%;
+    border-radius: 20px;
+    float: left;
+    /* margin-right: 8%; */
+    margin-right:2%;
+    font-size: 18px;
+    background-color: rgb(211, 211, 211);
+    z-index: 0;
+  }

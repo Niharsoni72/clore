@@ -1,0 +1,17 @@
+.container_main{
+    width:98%;
+    padding:2%;
+    z-index:0;
+ 
+    /* margin:auto; */
+    /* display: block; */   
+}
+.master_container{
+    /* float:left; */
+
+}
+
+.custom{
+    border: 1px solid black;
+    background-color: blue;
+}

@@ -1,0 +1,12 @@
+.main_container{
+    width:92%;
+    max-width: 96%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+.container_center{
+    margin-left: auto;
+    margin-right: auto;
+    
+}

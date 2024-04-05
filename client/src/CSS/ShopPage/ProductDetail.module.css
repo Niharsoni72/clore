@@ -1,0 +1,27 @@
+.main_container{
+    width:100%;
+    float:left;
+}
+.main_container.left{
+    margin-top:3%;
+    width:53%;
+
+}
+.main_container.right{
+    margin-top:15%;
+    width:30%;
+}
+
+.productImage{
+    height: auto;
+    width:30rem;
+    margin-left:auto;
+    margin-right:auto;
+    display: block;
+    border-radius: 10px;
+}
+
+.header{
+    text-align: center;
+    
+}

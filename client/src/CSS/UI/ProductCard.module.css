@@ -1,0 +1,36 @@
+.main_card {
+  background: linear-gradient(
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 255, 255, 0.8)
+  );
+  padding: 10px;
+  height: auto;
+  width: 18rem;
+  margin-top: 3%;
+  border-radius: 20px;
+  float: left;
+  /* margin-right: 8%; */
+  margin-right:2%;
+  font-size: 18px;
+  background-color: rgb(211, 211, 211);
+  z-index: 0;
+}
+.prodImage{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 93%;
+  border-radius: 10px;
+}
+.prodImage:hover{
+  transform:scale(1.02);
+  transition: 0.5s ease;
+}
+h5{
+  margin-top:5%;
+}
+.buttons_group{
+  width:100%;
+  display: block;
+  text-align: center;
+}

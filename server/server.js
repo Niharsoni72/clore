@@ -116,6 +116,11 @@ app.get("/api/getallmyorders", async (req, res) => {
     }
 })
 
+// Route for fetching products or searching by product name
+// Route for searching products by product_name
+
+
+
 app.get("/api/getmyorderid/:id", async (req, res) => {
     try {
         const {id} = req.params
@@ -454,6 +459,40 @@ app.post("/api/addtocart/:productId", async (req, res)=>{
     }
 });
 
+app.post("/api/addtowishlist/:productId", async (req, res) => {
+    try {
+        const { productId } = req.params;
+        const token = req.headers.authorization;
+        const verifytoken = jwt.verify(token, Skey);
+        const rootUser = await User.findOne({ _id: verifytoken._id });
+        const rootProduct = await productdb.findOne({ _id: productId });
+
+        const currentWishlist = await Wishlist.findOne({ product_id: productId, user_id: rootUser._id });
+
+        if (!currentWishlist) {
+            const addToWishlist = await Wishlist.create({
+                product_id: productId,
+                user_id: rootUser._id,
+                qty: 1,
+                total_amount: rootProduct.price
+            });
+            console.log("Product Added to Wishlist Successfully:", addToWishlist);
+            return res.status(201).json(addToWishlist);
+        } else {
+            // Increment quantity or update as per your requirement
+            const updateWishlist = await Wishlist.updateOne(
+                { product_id: productId, user_id: rootUser._id },
+                { qty: currentWishlist.qty + 1, total_amount: (currentWishlist.qty + 1) * rootProduct.price }
+            );
+            console.log("Product Updated in Wishlist Successfully:", updateWishlist);
+            return res.status(201).json(updateWishlist);
+        }
+    } catch (err) {
+        console.error("Error adding to Wishlist:", err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
 app.get("/api/getcartitems", async (req, res)=>{
     try{
         const token =  req.headers.authorization;
@@ -691,6 +730,24 @@ app.get("/api/getproduct", async (req, res) => {
         res.status(422).json(error);
     }
 })
+
+app.get("/api/search", async (req, res) => {
+    const searchTerm = req.query.q;
+    try {
+        let productData;
+        if (searchTerm) {
+            productData = await productdb.find({
+                product_name: { $regex: searchTerm, $options: 'i' }
+            }).populate('category_id sub_category_id brand_id');
+        } else {
+            productData = await productdb.find().populate('category_id sub_category_id brand_id');
+        }
+        res.json(productData);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 
 app.get("/api/getproductid/:id", async (req, res) => {
     try {

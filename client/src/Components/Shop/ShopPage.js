@@ -60,7 +60,6 @@ const Home = () => {
     setList(histData);
   };
 
-  // Function to handle search
   const handleSearch = async () => {
     console.log("Search term:", searchTerm); // Debugging statement
     const res = await fetch(`http://localhost:1337/api/search?q=${searchTerm}`, {

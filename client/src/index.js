@@ -35,6 +35,7 @@ import MyOrderDetails from './Components/Account/MyOrderDetails';
 import ShowOrders from './Components/Admin/ShowOrders';
 import AdminLogin from './Components/Admin/AdminLogin';
 import AdminHomePage from './Components/Admin/AdminHomePage';
+import Favourite from './Components/Cart/Favourite';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -56,6 +57,8 @@ root.render(
       <Route path ="/Cart" element={<CartPage></CartPage>} />
       
       <Route path ="/AddProduct" element={<AddProduct />} />
+      <Route path ="/getfavourite" element={<Favourite />} />
+
       <Route path ="/ShowProduct" element={<ShowProduct />} />
       <Route path ="/EditProduct/:id" element={<EditProduct />} />
       <Route path="/EditAddress" element={<EditAddress/>}></Route>

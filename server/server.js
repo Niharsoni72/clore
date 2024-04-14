@@ -10,6 +10,8 @@ const Razorpay = require("razorpay")
 const crypto = require("crypto")
 const store = new session.MemoryStore();
 const app = express();
+const Favorite = require('./models/favourite.model')
+
 // const bcrypt = require("bcryptjs")
 const productdb = require('./models/product.models');
 const categorydb = require('./models/category.models');
@@ -416,6 +418,38 @@ app.get("/api/getuserid/:id", async (req, res) => {
         }
     });
 //admin login end
+app.post("/api/addtofavorite/:productId", async (req, res) => {
+    try {
+        const { productId } = req.params;
+        const token = req.headers.authorization;
+        const verifyToken = jwt.verify(token, Skey);
+        
+        const user = await User.findOne({ _id: verifyToken._id });
+
+        const currentFavorites = await Favorite.findOne({ userId: user._id });
+
+        if (!currentFavorites) {
+            const newFavorites = await Favorite.create({
+                userId: user._id,
+                products: [productId]
+            });
+
+            console.log("Product Added to Favorites Successfully");
+            return res.status(201).json(newFavorites);
+        } else {
+            if (!currentFavorites.products.includes(productId)) {
+                currentFavorites.products.push(productId);
+                await currentFavorites.save();
+            }
+
+            console.log("Product Added to Favorites Successfully");
+            return res.status(201).json(currentFavorites);
+        }
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+});
 
 app.post("/api/addtocart/:productId", async (req, res)=>{
     try{
@@ -459,39 +493,6 @@ app.post("/api/addtocart/:productId", async (req, res)=>{
     }
 });
 
-app.post("/api/addtowishlist/:productId", async (req, res) => {
-    try {
-        const { productId } = req.params;
-        const token = req.headers.authorization;
-        const verifytoken = jwt.verify(token, Skey);
-        const rootUser = await User.findOne({ _id: verifytoken._id });
-        const rootProduct = await productdb.findOne({ _id: productId });
-
-        const currentWishlist = await Wishlist.findOne({ product_id: productId, user_id: rootUser._id });
-
-        if (!currentWishlist) {
-            const addToWishlist = await Wishlist.create({
-                product_id: productId,
-                user_id: rootUser._id,
-                qty: 1,
-                total_amount: rootProduct.price
-            });
-            console.log("Product Added to Wishlist Successfully:", addToWishlist);
-            return res.status(201).json(addToWishlist);
-        } else {
-            // Increment quantity or update as per your requirement
-            const updateWishlist = await Wishlist.updateOne(
-                { product_id: productId, user_id: rootUser._id },
-                { qty: currentWishlist.qty + 1, total_amount: (currentWishlist.qty + 1) * rootProduct.price }
-            );
-            console.log("Product Updated in Wishlist Successfully:", updateWishlist);
-            return res.status(201).json(updateWishlist);
-        }
-    } catch (err) {
-        console.error("Error adding to Wishlist:", err);
-        res.status(500).json({ message: "Internal server error" });
-    }
-});
 
 app.get("/api/getcartitems", async (req, res)=>{
     try{
@@ -759,6 +760,33 @@ app.get("/api/getproductid/:id", async (req, res) => {
         res.status(422).json(error);
     }
 })
+// Endpoint to get favourite products
+// Endpoint to get favourite products and fetch corresponding product details
+app.get("/api/getfavouriteproducts", async (_, res) => {
+    try {
+        console.log("Fetching favorite products...");
+
+        // Fetch all favorite documents from the 'favorite' collection
+        const favorites = await Favorite.find();
+        console.log("Fetched favorites:", favorites);
+
+        // Extracting product IDs from the fetched favorites
+        const productIds = favorites.flatMap(favorite => favorite.products);
+        console.log("Extracted product IDs:", productIds);
+
+        // Fetch products based on the extracted product IDs from the 'Products' collection
+        const products = await productdb.find({ _id: { $in: productIds } }); // Use the productdb model here
+        console.log("Fetched products:", products);
+
+        // Respond with the fetched products
+        res.status(200).json(products);
+    } catch (error) {
+        console.error("Error fetching favorite products:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+
 
 app.delete("/api/deleteproduct/:id", async (req, res) => {
     try {
